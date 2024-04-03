@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 namespace efcoreApp.Data{
-    public class Ogrenci //öğrenci entity sınıfı
+    public class Ogrenci //öğrenci entity sınıfı (entity sınıfı => bir veri tabanındaki tablolara karşılık gelir)
     {
         //id => primary key
         [Key]//tanımlanan proportynin key özellikte olduğunu vurgular (id hariç farklı bir isim verilmek istenirse bu attribute kullanılmalıdır)
