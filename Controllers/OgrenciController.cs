@@ -1,5 +1,6 @@
 using efcoreApp.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace efcoreApp.Controllers
 {
@@ -9,6 +10,10 @@ namespace efcoreApp.Controllers
         public OgrenciController(DataContext context){
             _context = context;
         }
+        public async Task<ActionResult> Index(){
+            
+            return View(await _context.Ogrenciler.ToListAsync());
+        }
         public IActionResult Create(){
             return View();
         }
@@ -16,8 +21,8 @@ namespace efcoreApp.Controllers
         public async Task<IActionResult> Create(Ogrenci model){ //geri dönüş değeri için task yazılır
             _context.Ogrenciler.Add(model);
             await _context.SaveChangesAsync();//async bir metod olduğu için await ile bekletilir.
-            return RedirectToAction("Index","Home");
-            return View();
+            return RedirectToAction("Index");
+            
         }
     
     }
