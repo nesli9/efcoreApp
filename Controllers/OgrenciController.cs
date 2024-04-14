@@ -85,8 +85,11 @@ namespace efcoreApp.Controllers
         }
         [HttpPost]
         public async Task<IActionResult> Delete([FromForm]int id) { //formdan gelen idyi alması için fromform binding kullanılır.
-        
+
             var ogrenci = await _context.Ogrenciler.FindAsync(id);
+            if(ogrenci == null){
+                return NotFound();
+            }
             _context.Ogrenciler.Remove(ogrenci);
             await _context.SaveChangesAsync();
 
