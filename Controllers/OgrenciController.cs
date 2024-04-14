@@ -25,6 +25,7 @@ namespace efcoreApp.Controllers
             
         }
 
+        [HttpGet]
         public async Task<IActionResult> Edit(int? id){
             if (id == null){
                 return NotFound();
@@ -41,6 +42,33 @@ namespace efcoreApp.Controllers
             return View(ogr);
 
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]// cross-site saldırısını engellemek için güvenlik kontrölü yapar. // formu get ve post eden kişi aynı mı kontrolünü yapar
+        public async Task<IActionResult> Edit(int id, Ogrenci model){
+            if(id != model.OgrenciId){
+                return NotFound();
+            }
+
+            if (ModelState.IsValid){
+                try{
+                    _context.Update(model);
+                    await _context.SaveChangesAsync();//veritabanaında güncellemeyi gerçekleştiren satır
+                }
+                catch (DbUpdateConcurrencyException){
+                    if (!_context.Ogrenciler.Any(o => o.OgrenciId == model.OgrenciId)){ //kayıt veri tabanında yoksa
+                        return NotFound();
+                    }
+                    else{
+                        throw;
+                    }
+                    
+                }
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+        
+        }
     
-    }
 }

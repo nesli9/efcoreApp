@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddDbContext<DataContext>(options => {
+builder.Services.AddDbContext<DataContext>(options => { //veritabanı bağlantı kurma
     var config = builder.Configuration;
     var connectionString = config.GetConnectionString("database");
     options.UseSqlite(connectionString);
