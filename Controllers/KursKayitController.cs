@@ -10,8 +10,13 @@ namespace efcoreApp.Controllers{
             _context = context;
         }
 
-        public IActionResult Index(){
-            return View();
+        public async Task<IActionResult> Index(){
+            var kursKayitlari = await _context
+                                .KursKayitlari
+                                .Include(x => x.Ogrenci) //kurs kayıtlarıyla ilişkisi olan öğrenci bilgilerini yükler
+                                .Include(x => x.Kurs) // veritabanındaki join işlemidir
+                                .ToListAsync();
+            return View(kursKayitlari);
         }
 
         public async Task<IActionResult> Create(){
