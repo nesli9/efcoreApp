@@ -14,7 +14,7 @@ namespace efcoreApp.Controllers{
             var kursKayitlari = await _context
                                 .KursKayitlari
                                 .Include(x => x.Ogrenci) //kurs kayıtlarıyla ilişkisi olan öğrenci bilgilerini yükler
-                                .Include(x => x.Kurs) // veritabanındaki join işlemidir
+                                .Include(x => x.Kurs) // veritabanındaki join işlemidir (navigation properties)
                                 .ToListAsync();
             return View(kursKayitlari);
         }

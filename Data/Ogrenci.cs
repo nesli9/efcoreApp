@@ -12,9 +12,11 @@ namespace efcoreApp.Data{
             get {
                 return this.OgrenciAd + " " + this.OgrenciSoyad;
             }
-         }
+        }
         public string? Eposta { get; set; }
         public string? Telefon { get; set; }
+
+        public ICollection<KursKayit> KursKayitlari { get; set; } = new List<KursKayit>();//collection : liste tipinde kurs kayıt alır .(öğrencinin birden fazla kursa kayıt olabileceğinden dolayı)
 
     }
 }

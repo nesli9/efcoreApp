@@ -31,7 +31,11 @@ namespace efcoreApp.Controllers
                 return NotFound();
             }
 
-            var ogr = await _context.Ogrenciler.FindAsync(id);
+            var ogr = await _context
+                                .Ogrenciler
+                                .Include(o => o.KursKayitlari)
+                                .ThenInclude(o => o.Kurs) //öce modele gidilir daha sonra modelden kurskayıta geçiş yapılıp veri alındığı için thenInclude kullanılır
+                                .FirstOrDefaultAsync(o => o.OgrenciId == id);
             // var ogr = await _context.Ogrenciler.FirstOrDefaultAsync(o => o.OgrenciId == id); //bulduğu ilk kaydı dönderir (id ile arananlarda)
 
             
@@ -86,7 +90,12 @@ namespace efcoreApp.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete([FromForm]int id) { //formdan gelen idyi alması için fromform binding kullanılır.
 
-            var ogrenci = await _context.Ogrenciler.FindAsync(id);
+            var ogrenci = await _context
+                            .Ogrenciler
+                            .Include(o => o.KursKayitlari)
+                            .ThenInclude(o => o.Kurs)
+                            .FirstOrDefaultAsync(o => o.OgrenciId == id);
+
             if(ogrenci == null){
                 return NotFound();
             }
