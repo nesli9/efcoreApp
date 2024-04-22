@@ -1,4 +1,5 @@
 using efcoreApp.Data;
+using efcoreApp.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,7 @@ namespace efcoreApp.Controllers{
         }
 
         public async Task<IActionResult> Index(){
-            var kurslar = await _context.Kurslar.ToListAsync();
+            var kurslar = await _context.Kurslar.Include(k => k.Ogretmen).ToListAsync();
             return View(kurslar);
         }
 
@@ -41,25 +42,33 @@ namespace efcoreApp.Controllers{
                                     .Kurslar
                                     .Include(k => k.KursKayitlari)
                                     .ThenInclude(k => k.Ogrenci)
+                                    .Select(k => new KursViewModel{
+                                        KursId = k.KursId,
+                                        Baslik = k.Baslik,
+                                        OgretmenId = k.OgretmenId,
+                                        KursKayitlari = k.KursKayitlari
+                                    })
                                     .FirstOrDefaultAsync(k => k.KursId == id);
             
             if(kurs == null){
                 return NotFound();
             }
 
+            ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(),"OgretmenId" , "AdSoyad");
+
             return View(kurs);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Kurs model){
+        public async Task<IActionResult> Edit(int id, KursViewModel model){
             if(id != model.KursId){
                 return NotFound();
             }
 
             if (ModelState.IsValid){
                 try{
-                    _context.Update(model);
+                    _context.Update(new Kurs() {KursId = model.KursId , Baslik = model.Baslik, OgretmenId = model.OgretmenId});
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateException){
@@ -103,8 +112,6 @@ namespace efcoreApp.Controllers{
 
             return RedirectToAction("Index");
         }
-        
-
 
     }
 }
