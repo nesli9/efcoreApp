@@ -1,5 +1,6 @@
 using efcoreApp.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 
 namespace efcoreApp.Controllers{
@@ -15,7 +16,8 @@ namespace efcoreApp.Controllers{
             return View(kurslar);
         }
 
-        public IActionResult Create(){
+        public async Task<IActionResult> Create(){
+            ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(),"OgretmenId" , "AdSoyad");
             return View();
         }
 
