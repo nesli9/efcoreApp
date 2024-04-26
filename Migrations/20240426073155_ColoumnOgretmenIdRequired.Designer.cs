@@ -11,8 +11,8 @@ using efcoreApp.Data;
 namespace efcoreApp.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240416112349_AddTableOgretmen")]
-    partial class AddTableOgretmen
+    [Migration("20240426073155_ColoumnOgretmenIdRequired")]
+    partial class ColoumnOgretmenIdRequired
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,7 +29,7 @@ namespace efcoreApp.Migrations
                     b.Property<string>("Baslik")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("OgretmenId")
+                    b.Property<int>("OgretmenId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("KursId");
@@ -116,7 +116,9 @@ namespace efcoreApp.Migrations
                 {
                     b.HasOne("efcoreApp.Data.Ogretmen", "Ogretmen")
                         .WithMany("Kurslar")
-                        .HasForeignKey("OgretmenId");
+                        .HasForeignKey("OgretmenId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Ogretmen");
                 });

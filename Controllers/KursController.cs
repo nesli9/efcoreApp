@@ -25,11 +25,14 @@ namespace efcoreApp.Controllers{
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<IActionResult> Create(Kurs model){ 
-            _context.Kurslar.Add(model);
+        public async Task<IActionResult> Create(KursViewModel model){ 
+            if(ModelState.IsValid){
+            _context.Kurslar.Add(new Kurs() {KursId = model.KursId , Baslik = model.Baslik, OgretmenId = model.OgretmenId});
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
-            
+            }
+            ViewBag.Ogretmenler = new SelectList(await _context.Ogretmenler.ToListAsync(),"OgretmenId" , "AdSoyad");
+            return View();
         }
 
         [HttpGet]
